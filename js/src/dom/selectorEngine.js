@@ -46,9 +46,10 @@ const SelectorEngine = {
     return fnMatches.call(element, selector)
   },
 
-  find(selector) {
-    if (typeof selector !== 'string') {
-      return null
+  find(element, selector) {
+    const elementIsSelector = typeof element === 'string'
+    if (elementIsSelector) {
+      selector = element
     }
 
     let selectorType = 'querySelectorAll'
@@ -56,7 +57,9 @@ const SelectorEngine = {
       selectorType = 'getElementById'
       selector = selector.substr(1, selector.length)
     }
-    return document[selectorType](selector)
+
+    const domBase = !elementIsSelector && selectorType !== 'getElementById' ? element : document
+    return domBase[selectorType](selector)
   },
 
   closest(element, selector) {
